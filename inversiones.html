@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Inversiones · Resumen e Ideas Semanales</title>
+<meta name="description" content="Resumen semanal de mercados e ideas de inversión basadas en el movimiento real del mercado.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e17;--panel:#111826;--panel-2:#0e1420;--line:rgba(255,255,255,.07);
+    --txt:#e7eaf2;--dim:#8b94a8;--faint:#5a6479;
+    --up:#33d98a;--down:#ff5f6d;--accent:#3ddc97;--amber:#f5b544;--violet:#9d8bff;
+    --disp:'Sora',sans-serif;--body:'Figtree',sans-serif;--mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--txt);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;background:radial-gradient(900px 500px at 80% -10%,rgba(61,220,151,.08),transparent 60%),radial-gradient(700px 400px at 0% 0%,rgba(157,139,255,.06),transparent 55%);pointer-events:none;z-index:0}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+
+  /* header */
+  header{padding:40px 0 8px}
+  .brand{font-family:var(--mono);font-size:13px;letter-spacing:.05em;color:var(--accent)}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(28px,5vw,44px);letter-spacing:-.02em;margin:10px 0 6px;line-height:1.05}
+  .sub{color:var(--dim);font-size:15px}
+  .updated{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:14px;border:1px solid var(--line);border-radius:100px;padding:6px 14px;background:var(--panel-2)}
+  .updated .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(61,220,151,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,151,.5)}70%{box-shadow:0 0 0 8px rgba(61,220,151,0)}100%{box-shadow:0 0 0 0 rgba(61,220,151,0)}}
+
+  /* disclaimer */
+  .disclaimer{margin:22px 0;background:rgba(245,181,68,.08);border:1px solid rgba(245,181,68,.28);border-left:3px solid var(--amber);border-radius:10px;padding:14px 18px;font-size:13px;color:#f4d9a0}
+  .disclaimer b{color:var(--amber)}
+
+  /* live ticker */
+  .live{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0 6px}
+  .live-card{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px}
+  .live-card .ic{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--bg);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+  .live-card.btc .ic{background:var(--amber)}
+  .live-card.eth .ic{background:var(--violet)}
+  .live-card .lbl{font-size:11px;color:var(--faint);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase}
+  .live-card .px{font-family:var(--mono);font-weight:700;font-size:19px}
+  .live-card .ch{font-family:var(--mono);font-size:12px}
+  .live-tag{font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid rgba(61,220,151,.3);border-radius:5px;padding:2px 7px;margin-left:auto;align-self:flex-start}
+
+  /* sections */
+  section{margin:46px 0}
+  .sec-h{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .sec-h .n{font-family:var(--mono);font-size:12px;color:var(--accent)}
+  .sec-h h2{font-family:var(--disp);font-weight:700;font-size:23px;letter-spacing:-.01em}
+  .sec-h .ln{flex:1;height:1px;background:var(--line)}
+
+  /* market grid */
+  .mkt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:13px}
+  .mkt{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:transform .25s,border-color .25s}
+  .mkt:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.16)}
+  .mkt .name{font-size:12px;color:var(--dim);font-family:var(--mono);letter-spacing:.03em}
+  .mkt .val{font-family:var(--mono);font-weight:700;font-size:21px;margin:6px 0 3px}
+  .mkt .chg{font-family:var(--mono);font-size:12.5px}
+  .up{color:var(--up)} .down{color:var(--down)} .neutral{color:var(--dim)}
+
+  /* context */
+  .context{background:linear-gradient(150deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px;padding:22px 26px;font-size:15px;color:#d4d9e6;line-height:1.7}
+  .context b{color:var(--accent);font-weight:600}
+
+  /* stocks */
+  .stocks{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .stock-row{display:flex;align-items:center;gap:16px;padding:15px 20px;border-bottom:1px solid var(--line)}
+  .stock-row:last-child{border-bottom:none}
+  .stock-row .tk{font-family:var(--mono);font-weight:700;font-size:15px;min-width:64px}
+  .stock-row .rs{flex:1;font-size:13.5px;color:var(--dim)}
+  .stock-row .pc{font-family:var(--mono);font-weight:700;font-size:14px;white-space:nowrap}
+
+  /* news */
+  .news{display:grid;gap:13px}
+  .news-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;border-left:3px solid var(--violet)}
+  .news-item h3{font-family:var(--disp);font-weight:600;font-size:15.5px;margin-bottom:6px}
+  .news-item p{font-size:14px;color:var(--dim);line-height:1.6}
+
+  /* ideas */
+  .ideas-block{margin-bottom:26px}
+  .ideas-block .ih{font-family:var(--mono);font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:13px;display:flex;align-items:center;gap:8px}
+  .ideas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .idea{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:18px 20px;transition:transform .25s}
+  .idea:hover{transform:translateY(-3px)}
+  .idea.bajo{border-left-color:var(--up)} .idea.medio{border-left-color:var(--amber)} .idea.alto{border-left-color:var(--down)}
+  .idea .tk{font-family:var(--mono);font-weight:700;font-size:16px}
+  .idea .nm{font-size:12px;color:var(--faint);margin-bottom:10px}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+  .badge{font-family:var(--mono);font-size:10.5px;font-weight:500;padding:3px 9px;border-radius:100px}
+  .b-tipo{background:rgba(61,220,151,.12);color:var(--accent)}
+  .b-mkt{background:rgba(157,139,255,.13);color:var(--violet)}
+  .b-bajo{background:rgba(51,217,138,.13);color:var(--up)}
+  .b-medio{background:rgba(245,181,68,.14);color:var(--amber)}
+  .b-alto{background:rgba(255,95,109,.13);color:var(--down)}
+  .idea .tesis{font-size:13.5px;color:#cfd5e3;line-height:1.6;margin-bottom:12px}
+  .idea .meta{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .idea .meta div{background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:7px 10px}
+  .idea .meta .l{font-size:10px;color:var(--faint);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}
+  .idea .meta .v{font-size:12.5px;font-weight:600;margin-top:1px}
+
+  footer{margin:50px 0 36px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--faint);line-height:1.7;text-align:center}
+  footer b{color:var(--dim)}
+  .how{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:30px 0;font-size:13.5px;color:var(--dim);line-height:1.65}
+  .how b{color:var(--accent)}
+  .how code{font-family:var(--mono);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:5px;color:var(--txt);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">// panel-de-inversiones</div>
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+    <div class="updated"><span class="pulse"></span><span id="updated"></span></div>
+  </header>
+
+  <div class="disclaimer">
+    ⚠️ <b>Aviso:</b> Este panel es meramente informativo y educativo. No constituye asesoramiento financiero ni una recomendación de compra o venta. Toda inversión conlleva riesgo de pérdida del capital. Consulta siempre con un asesor financiero certificado y haz tu propia investigación (DYOR).
+  </div>
+
+  <div class="live">
+    <div class="live-card btc">
+      <div class="ic">₿</div>
+      <div>
+        <div class="lbl">Bitcoin · en vivo</div>
+        <div class="px" id="btc-px">—</div>
+        <div class="ch" id="btc-ch">cargando…</div>
+      </div>
+      <span class="live-tag" id="btc-tag">LIVE</span>
+    </div>
+    <div class="live-card eth">
+      <div class="ic">Ξ</div>
+      <div>
+        <div class="lbl">Ethereum · en vivo</div>
+        <div class="px" id="eth-px">—</div>
+        <div class="ch" id="eth-ch">cargando…</div>
+      </div>
+      <span class="live-tag" id="eth-tag">LIVE</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-h"><span class="n">01</span><h2>Resumen de Mercados</h2><span class="ln"></span></div>
+    <div class="mkt-grid" id="markets"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">02</span><h2>Contexto de la Semana</h2><span class="ln"></span></div>
+    <div class="context" id="context"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">03</span><h2>Acciones Trending</h2><span class="ln"></span></div>
+    <div class="stocks" id="stocks"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">04</span><h2>Noticias Clave</h2><span class="ln"></span></div>
+    <div class="news" id="news"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">05</span><h2>Ideas de Inversión</h2><span class="ln"></span></div>
+    <div id="ideas"></div>
+  </section>
+
+  <div class="how">
+    <b>¿Cómo se actualiza?</b> Todo el contenido semanal vive en el objeto <code>WEEKLY_DATA</code> al inicio del código. Para refrescarlo, pídele a Claude <em>"actualiza mi web de inversiones"</em> cada semana: regenerará este bloque con datos reales y volverás a subir el archivo. El ticker de cripto de arriba se actualiza solo en cada visita.
+  </div>
+
+  <footer>
+    Panel generado por Claude a partir de datos públicos del mercado.<br>
+    <b>No son recomendaciones de inversión profesionales.</b> Haz siempre tu propia investigación (DYOR).<br>
+    Las cifras de índices son orientativas y referidas al cierre indicado; la cripto cotiza 24/7.
+  </footer>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   WEEKLY_DATA — ÚNICO bloque a actualizar cada semana.
+   Datos reales recopilados el 3 de junio de 2026.
+   ════════════════════════════════════════════════════════════════ */
+const WEEKLY_DATA = {
+  title: "Resumen e Ideas de Inversión",
+  subtitle: "Basado en el movimiento real del mercado · Semana del 26 may al 3 jun 2026",
+  updated: "Actualizado: 3 de junio de 2026",
+
+  markets: [
+    { name: "S&P 500",    value: "7.600",  change: "Máx. histórico · 9ª sem. ↑", cls: "up" },
+    { name: "Nasdaq Comp.",value: "27.086", change: "Boom de chips ↑",            cls: "up" },
+    { name: "IBEX 35",    value: "18.185", change: "−0,97% últ. sesión",         cls: "down" },
+    { name: "DAX",        value: "25.003", change: "+0,87% sem.",                cls: "up" },
+    { name: "CAC 40",     value: "8.147",  change: "+0,83% sem.",                cls: "up" },
+    { name: "Bitcoin",    value: "$67.250",change: "≈ −8% sem.",                 cls: "down" },
+    { name: "Ethereum",   value: "$1.884", change: "≈ −7% sem.",                 cls: "down" },
+    { name: "Oro",        value: "$4.578", change: "+1% · refugio",              cls: "up" }
+  ],
+
+  context: "Semana de contrastes. La renta variable estadounidense marcó <b>nuevos máximos históricos</b> (S&P 500 por encima de 7.600 por primera vez) impulsada por el boom de los chips y la IA, con Dell y Snowflake disparándose ~40% tras resultados. Europa acompañó (DAX +0,87%, CAC +0,83%), mientras IBEX y FTSE quedaron algo rezagados. En el lado opuesto, las <b>criptomonedas sufrieron un fuerte castigo</b> (BTC por debajo de $67k, ETH bajo $2.000) por salidas récord de ETFs y rotación hacia la IA. El telón macro sigue tenso: el dato de <b>PCE fue el más alto en casi tres años</b>, la geopolítica de Oriente Medio mantiene el petróleo cerca de $88 y el <b>viernes llega el informe de empleo</b>, clave para las expectativas de tipos de la Fed.",
+
+  stocks: [
+    { tk: "DELL",  rs: "Resultados trimestrales excepcionales; sigue la racha tech", pc: "+40%", cls: "up" },
+    { tk: "SNOW",  rs: "Snowflake dispara tras un fuerte beat en resultados",        pc: "+40%", cls: "up" },
+    { tk: "Semis", rs: "Liderazgo de la IA: Nvidia, AMD, ASML empujan el Nasdaq",    pc: "Sector ↑", cls: "up" },
+    { tk: "Cripto",rs: "BTC y ETH a la baja por salidas récord de ETFs (~$1.420 M)",  pc: "Sector ↓", cls: "down" }
+  ],
+
+  news: [
+    { h: "PCE, el más alto en casi tres años", p: "La inflación subyacente sorprendió al alza, pero los índices marcaron récords igualmente. La Fed sigue en el foco de cara a sus próximas decisiones de tipos." },
+    { h: "Esperanzas de alto el fuego EE.UU.–Irán", p: "Las negociaciones sobre una extensión de 60 días y la reapertura del Estrecho de Ormuz mueven el petróleo (~$88) y el apetito por el riesgo." },
+    { h: "Salidas récord de ETFs de Bitcoin", p: "Cerca de $1.420 M en salidas marcan un tono risk-off en cripto mientras el capital rota hacia la IA. El viernes, el informe de empleo será clave para los tipos." }
+  ],
+
+  ideas: {
+    momentum: [
+      { tk:"SOXX / QQQ", nm:"ETF semiconductores / Nasdaq 100", tipo:"ETF", mkt:"EE.UU.", riesgo:"medio",
+        tesis:"El boom de chips lidera el mercado. Un ETF de semis o del Nasdaq da exposición diversificada a la tendencia de IA sin depender de una sola acción.",
+        precio:"Cotiza en máximos", catalizador:"Resultados tech (Dell/Snowflake +40%)", vigilar:"Valoraciones exigentes", horizonte:"Medio plazo" },
+      { tk:"XLE / Repsol", nm:"Energía (ETF / acción ES)", tipo:"ETF · Acción", mkt:"EE.UU. · España", riesgo:"medio",
+        tesis:"El petróleo ronda los $88 por la geopolítica de Oriente Medio. La energía funciona como jugada de momentum y cobertura ante el riesgo geopolítico.",
+        precio:"Brent/WTI ~$88", catalizador:"Tensión EE.UU.–Irán", vigilar:"Un acuerdo que reabra Ormuz enfriaría el crudo", horizonte:"Corto-medio" }
+    ],
+    valor: [
+      { tk:"BTC / ETH", nm:"Bitcoin / Ethereum", tipo:"Cripto", mkt:"Cripto", riesgo:"alto",
+        tesis:"Tras salidas récord de ETFs y la caída a ~$67k (BTC) y ~$1.880 (ETH), la zona se acerca a sobreventa (RSI bajo). Posible rebote táctico, pero volatilidad altísima.",
+        precio:"BTC ~$67k · ETH ~$1.9k", catalizador:"Giro en flujos de ETF", vigilar:"Más salidas / dato de empleo", horizonte:"Especulativo" },
+      { tk:"IBEX 35", nm:"Bolsa española (ETF)", tipo:"ETF", mkt:"España", riesgo:"medio",
+        tesis:"Rezagado frente a EE.UU. y Europa core esta semana. La banca (Santander) y los valores value pueden beneficiarse si el BCE mantiene tipos altos.",
+        precio:"Índice ~18.185", catalizador:"Tipos altos del BCE", vigilar:"Sensibilidad a energía", horizonte:"Medio plazo" }
+    ],
+    defensivas: [
+      { tk:"MSCI World", nm:"Fondo indexado global", tipo:"Fondo indexado", mkt:"Global", riesgo:"bajo",
+        tesis:"Con los índices en máximos e inflación pegajosa, la vía más sólida sigue siendo la diversificación global y las aportaciones periódicas (DCA), no el market timing.",
+        precio:"Aportación periódica", catalizador:"Crecimiento global", vigilar:"Comisiones (TER bajo)", horizonte:"Largo plazo" },
+      { tk:"XLP / XLU", nm:"Consumo básico / Utilities", tipo:"ETF", mkt:"EE.UU.", riesgo:"bajo",
+        tesis:"Sectores defensivos para amortiguar volatilidad si el dato de empleo o la inflación sorprenden. Menor beta en un mercado caro y en máximos.",
+        precio:"Cotiza en rango", catalizador:"Rotación defensiva", vigilar:"Subidas de tipos", horizonte:"Medio-largo" },
+      { tk:"GLD", nm:"Oro (ETF)", tipo:"ETF", mkt:"Global", riesgo:"bajo",
+        tesis:"El oro (~$4.578) se mantiene firme como refugio ante la inflación persistente y el riesgo geopolítico. Aporta descorrelación a la cartera.",
+        precio:"Oro ~$4.578", catalizador:"Inflación / geopolítica", vigilar:"Dólar fuerte", horizonte:"Largo plazo" }
+    ]
+  }
+};
+
+/* ──────────────── Render ──────────────── */
+const $ = id => document.getElementById(id);
+$("title").textContent = WEEKLY_DATA.title;
+$("subtitle").textContent = WEEKLY_DATA.subtitle;
+$("updated").textContent = WEEKLY_DATA.updated;
+
+$("markets").innerHTML = WEEKLY_DATA.markets.map(m => `
+  <div class="mkt">
+    <div class="name">${m.name}</div>
+    <div class="val">${m.value}</div>
+    <div class="chg ${m.cls}">${m.change}</div>
+  </div>`).join("");
+
+$("context").innerHTML = WEEKLY_DATA.context;
+
+$("stocks").innerHTML = WEEKLY_DATA.stocks.map(s => `
+  <div class="stock-row">
+    <span class="tk">${s.tk}</span>
+    <span class="rs">${s.rs}</span>
+    <span class="pc ${s.cls}">${s.pc}</span>
+  </div>`).join("");
+
+$("news").innerHTML = WEEKLY_DATA.news.map(n => `
+  <div class="news-item"><h3>${n.h}</h3><p>${n.p}</p></div>`).join("");
+
+const riskLabel = { bajo:"🟢 Riesgo Bajo", medio:"🟡 Riesgo Medio", alto:"🔴 Riesgo Alto" };
+function ideaCard(i){
+  return `<div class="idea ${i.riesgo}">
+    <div class="tk">${i.tk}</div>
+    <div class="nm">${i.nm}</div>
+    <div class="badges">
+      <span class="badge b-tipo">${i.tipo}</span>
+      <span class="badge b-mkt">${i.mkt}</span>
+      <span class="badge b-${i.riesgo}">${riskLabel[i.riesgo]}</span>
+    </div>
+    <div class="tesis">${i.tesis}</div>
+    <div class="meta">
+      <div><div class="l">Nivel</div><div class="v">${i.precio}</div></div>
+      <div><div class="l">Catalizador</div><div class="v">${i.catalizador}</div></div>
+      <div><div class="l">A vigilar</div><div class="v">${i.vigilar}</div></div>
+      <div><div class="l">Horizonte</div><div class="v">${i.horizonte}</div></div>
+    </div>
+  </div>`;
+}
+const blocks = [
+  { t:"🚀 Momentum — lo que tiene fuerza", k:"momentum" },
+  { t:"💎 Valor / Rebote — oportunidades en caídas", k:"valor" },
+  { t:"🛡️ Defensivas — para reducir riesgo", k:"defensivas" }
+];
+$("ideas").innerHTML = blocks.map(b => `
+  <div class="ideas-block">
+    <div class="ih">${b.t}</div>
+    <div class="ideas-grid">${WEEKLY_DATA.ideas[b.k].map(ideaCard).join("")}</div>
+  </div>`).join("");
+
+/* ──────────────── Cripto en vivo (CoinGecko, gratis, sin clave) ──────────────── */
+(async function liveCrypto(){
+  const fmt = n => "$" + n.toLocaleString("es-ES", {maximumFractionDigits: n < 10 ? 2 : 0});
+  function paint(id, price, change){
+    $(id+"-px").textContent = fmt(price);
+    const el = $(id+"-ch");
+    const up = change >= 0;
+    el.textContent = (up?"▲ +":"▼ ") + change.toFixed(2) + "% (24h)";
+    el.className = "ch " + (up?"up":"down");
+  }
+  function fallback(){
+    // Si la API no responde, usar el snapshot semanal incrustado
+    const btc = WEEKLY_DATA.markets.find(m=>m.name==="Bitcoin");
+    const eth = WEEKLY_DATA.markets.find(m=>m.name==="Ethereum");
+    $("btc-px").textContent = btc.value; $("btc-ch").textContent = btc.change; $("btc-ch").className="ch "+btc.cls; $("btc-tag").textContent="SEM.";
+    $("eth-px").textContent = eth.value; $("eth-ch").textContent = eth.change; $("eth-ch").className="ch "+eth.cls; $("eth-tag").textContent="SEM.";
+  }
+  try{
+    const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true");
+    if(!r.ok) throw new Error("api");
+    const d = await r.json();
+    paint("btc", d.bitcoin.usd, d.bitcoin.usd_24h_change);
+    paint("eth", d.ethereum.usd, d.ethereum.usd_24h_change);
+  }catch(e){ fallback(); }
+})();
+</script>
+</body>
+</html>
