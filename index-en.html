@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ricardo Rodríguez · Cloud Architect & Oracle DBA</title>
 <meta name="description" content="Computer Engineer specialized in Cloud Computing and Oracle Databases. Cloud Architect & Oracle DBA.">
+<meta name="theme-color" content="#0a0d12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%98%81%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="alternate" hreflang="es" href="index.html">
+<link rel="alternate" hreflang="en" href="index-en.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Ricardo Rodríguez · Cloud Architect & Oracle DBA">
+<meta property="og:description" content="Computer Engineer specialized in Cloud Computing and Oracle Databases.">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,7 +26,7 @@
     --line-2:rgba(255,255,255,.04);
     --txt:#e7eaf0;
     --txt-dim:#8b94a3;
-    --txt-faint:#5c6675;
+    --txt-faint:#727d8f;
     --amber:#f3b14e;
     --amber-deep:#e0901f;
     --cyan:#56c7c0;
@@ -70,7 +79,23 @@
   .navlinks a:hover{color:var(--amber)}
   .lang-toggle{border:1px solid var(--line);border-radius:6px;padding:5px 11px;color:var(--amber)!important}
   .lang-toggle:hover{border-color:var(--amber);background:rgba(243,177,78,.08)}
-  @media(max-width:680px){.navlinks{display:none}}
+  .nav-toggle{display:none;background:none;border:1px solid var(--line);border-radius:8px;width:42px;height:38px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+  .nav-toggle span{display:block;width:18px;height:2px;background:var(--txt);transition:transform .25s,opacity .25s}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  @media(max-width:680px){
+    .nav-toggle{display:flex}
+    .navlinks{
+      position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;
+      background:rgba(10,13,18,.97);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);padding:8px 0;
+      max-height:0;overflow:hidden;transition:max-height .3s ease;
+    }
+    .navlinks.open{max-height:420px}
+    .navlinks a{padding:14px 28px;font-size:14px;border-top:1px solid var(--line-2)}
+    .lang-toggle{margin:10px 28px;display:inline-block;width:max-content}
+  }
 
   /* HERO */
   header{padding:110px 0 90px;position:relative}
@@ -210,15 +235,31 @@
 
   @keyframes rise{to{opacity:1;transform:none}}
   .tag,h1,.role,.hero-meta,.cta{transform:translateY(20px)}
+
+  /* Accesibilidad y UX */
+  a:focus-visible,button:focus-visible,.mail:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+  section[id]{scroll-margin-top:84px}
+  .skip{position:absolute;left:-9999px;top:8px;z-index:100;background:var(--amber);color:#1a1206;padding:10px 18px;border-radius:8px;font-family:var(--mono);font-size:13px;text-decoration:none}
+  .skip:focus{left:16px}
+  /* Si no hay JS, el contenido sigue visible */
+  .no-js .reveal{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    .reveal,.tag,h1,.role,.hero-meta,.cta{opacity:1!important;transform:none!important}
+  }
 </style>
 </head>
 <body>
+<a href="#main" class="skip">Skip to content</a>
 <div class="glow"></div>
 
 <nav>
   <div class="wrap">
     <span class="brand">ricardo<b>.r</b>()</span>
-    <div class="navlinks">
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navlinks" id="navlinks">
       <a href="#about">// profile</a>
       <a href="#exp">// experience</a>
       <a href="#projects">// projects</a>
@@ -247,11 +288,12 @@
   </div>
 </header>
 
+<main id="main">
 <section id="about">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">01</span>
-      <span class="sec-title">Profile</span>
+      <h2 class="sec-title">Profile</h2>
       <span class="sec-line"></span>
     </div>
     <div class="about-grid reveal">
@@ -273,7 +315,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">02</span>
-      <span class="sec-title">Experience</span>
+      <h2 class="sec-title">Experience</h2>
       <span class="sec-line"></span>
     </div>
 
@@ -311,7 +353,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">03</span>
-      <span class="sec-title">Featured Projects</span>
+      <h2 class="sec-title">Featured Projects</h2>
       <span class="sec-line"></span>
     </div>
     <div class="proj-grid">
@@ -347,7 +389,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">04</span>
-      <span class="sec-title">Tech Stack</span>
+      <h2 class="sec-title">Tech Stack</h2>
       <span class="sec-line"></span>
     </div>
     <div class="skills-grid">
@@ -379,7 +421,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">05</span>
-      <span class="sec-title">Certifications</span>
+      <h2 class="sec-title">Certifications</h2>
       <span class="sec-line"></span>
     </div>
     <div class="certs reveal">
@@ -406,7 +448,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="sec-num">06</span>
-      <span class="sec-title">Education & Languages</span>
+      <h2 class="sec-title">Education & Languages</h2>
       <span class="sec-line"></span>
     </div>
     <div class="edu reveal">
@@ -442,16 +484,37 @@
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="wrap">© 2026 Ricardo Rodríguez Morales · Designed and built with attention to detail</div>
 </footer>
 
 <script>
-  const io=new IntersectionObserver((es)=>{
-    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
-  },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*60)+'ms';io.observe(el)});
+  // Hay JS: quitamos la marca para activar animaciones de aparición
+  document.documentElement.classList.remove('no-js');
+
+  // Menú móvil accesible
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.getElementById('navlinks');
+  if (toggle && links){
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    // Al pulsar un enlace, cerrar el menú
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+    }));
+  }
+
+  // Aparición al hacer scroll (respeta prefers-reduced-motion vía CSS)
+  const io = new IntersectionObserver((es) => {
+    es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach((el,i) => { el.style.transitionDelay = (i%4*60)+'ms'; io.observe(el); });
 </script>
 </body>
 </html>

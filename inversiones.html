@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel de Inversiones · Resumen e Ideas Semanales</title>
 <meta name="description" content="Resumen semanal de mercados e ideas de inversión basadas en el movimiento real del mercado.">
+<meta name="theme-color" content="#0a0e17">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Panel de Inversiones · Resumen e Ideas Semanales">
+<meta property="og:description" content="Resumen de mercados e ideas de inversión basadas en el movimiento real del mercado.">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0a0e17;--panel:#111826;--panel-2:#0e1420;--line:rgba(255,255,255,.07);
-    --txt:#e7eaf2;--dim:#8b94a8;--faint:#5a6479;
+    --txt:#e7eaf2;--dim:#8b94a8;--faint:#737e92;
     --up:#33d98a;--down:#ff5f6d;--accent:#3ddc97;--amber:#f5b544;--violet:#9d8bff;
     --disp:'Sora',sans-serif;--body:'Figtree',sans-serif;--mono:'JetBrains Mono',monospace;
   }
@@ -107,23 +114,36 @@
   .how{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:30px 0;font-size:13.5px;color:var(--dim);line-height:1.65}
   .how b{color:var(--accent)}
   .how code{font-family:var(--mono);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:5px;color:var(--txt);font-size:12.5px}
+  /* Accesibilidad y UX */
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+  .skip{position:absolute;left:-9999px;top:8px;z-index:100;background:var(--accent);color:#04231a;padding:10px 18px;border-radius:8px;font-family:var(--mono);font-size:13px;text-decoration:none}
+  .skip:focus{left:16px}
+  noscript .ns{display:block;margin:22px 0;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;color:var(--txt);font-size:14px}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
 </style>
 </head>
 <body>
+<a href="#main" class="skip">Saltar al contenido</a>
 <div class="wrap">
 
   <header>
     <div class="brand">// panel-de-inversiones</div>
-    <h1 id="title"></h1>
-    <p class="sub" id="subtitle"></p>
-    <div class="updated"><span class="pulse"></span><span id="updated"></span></div>
+    <h1 id="title">Panel de Inversiones</h1>
+    <p class="sub" id="subtitle">Cargando datos de la semana…</p>
+    <div class="updated"><span class="pulse"></span><span id="updated">Cargando…</span></div>
   </header>
 
-  <div class="disclaimer">
+  <noscript>
+    <div class="ns">Este panel necesita JavaScript para mostrar los datos de mercado en vivo. Actívalo en tu navegador para ver el contenido.</div>
+  </noscript>
+
+  <div class="disclaimer" role="note">
     ⚠️ <b>Aviso:</b> Este panel es meramente informativo y educativo. No constituye asesoramiento financiero ni una recomendación de compra o venta. Toda inversión conlleva riesgo de pérdida del capital. Consulta siempre con un asesor financiero certificado y haz tu propia investigación (DYOR).
   </div>
 
-  <div class="live">
+  <div class="live" aria-live="polite" aria-label="Precios de criptomonedas en vivo">
     <div class="live-card btc">
       <div class="ic">₿</div>
       <div>
@@ -145,6 +165,7 @@
   </div>
   <div class="live-ts" id="live-ts">Cripto en directo vía CoinGecko · se actualiza sola</div>
 
+  <main id="main">
   <section>
     <div class="sec-h"><span class="n">01</span><h2>Resumen de Mercados</h2><span class="ln"></span></div>
     <div class="mkt-grid" id="markets"></div>
@@ -169,6 +190,7 @@
     <div class="sec-h"><span class="n">05</span><h2>Ideas de Inversión</h2><span class="ln"></span></div>
     <div id="ideas"></div>
   </section>
+  </main>
 
   <div class="how">
     <b>¿Cómo se actualiza?</b> Todo el contenido semanal vive en el objeto <code>WEEKLY_DATA</code> al inicio del código. Para refrescarlo, pídele a Claude <em>"actualiza mi web de inversiones"</em> cada semana: regenerará este bloque con datos reales y volverás a subir el archivo. El ticker de cripto de arriba se actualiza solo en cada visita.
@@ -307,16 +329,15 @@ function render(DATA){
     </div>`).join("");
 }
 
-/* Lee data.json (generado por el workflow semanal); si no existe, usa el respaldo */
+/* Pinta el respaldo de inmediato (cero parpadeo) y luego refresca con data.json si existe */
 (async function boot(){
+  render(FALLBACK_DATA);
   try{
     const r = await fetch("data.json?t=" + Date.now(), {cache:"no-store"});
     if(!r.ok) throw new Error("no data.json");
     const d = await r.json();
     render(d);
-  }catch(e){
-    render(FALLBACK_DATA);
-  }
+  }catch(e){ /* nos quedamos con el respaldo ya pintado */ }
 })();
 
 /* ──────────────── Cripto en vivo (CoinGecko, gratis, sin clave) ──────────────── */
