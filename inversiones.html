@@ -43,6 +43,8 @@
   .live-card .px{font-family:var(--mono);font-weight:700;font-size:19px}
   .live-card .ch{font-family:var(--mono);font-size:12px}
   .live-tag{font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid rgba(61,220,151,.3);border-radius:5px;padding:2px 7px;margin-left:auto;align-self:flex-start}
+  .live-ts{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:8px;display:flex;align-items:center;gap:7px}
+  .live-ts::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
 
   /* sections */
   section{margin:46px 0}
@@ -141,6 +143,7 @@
       <span class="live-tag" id="eth-tag">LIVE</span>
     </div>
   </div>
+  <div class="live-ts" id="live-ts">Cripto en directo vía CoinGecko · se actualiza sola</div>
 
   <section>
     <div class="sec-h"><span class="n">01</span><h2>Resumen de Mercados</h2><span class="ln"></span></div>
@@ -184,7 +187,7 @@
    WEEKLY_DATA — ÚNICO bloque a actualizar cada semana.
    Datos reales recopilados el 3 de junio de 2026.
    ════════════════════════════════════════════════════════════════ */
-const WEEKLY_DATA = {
+const FALLBACK_DATA = {
   title: "Resumen e Ideas de Inversión",
   subtitle: "Basado en el movimiento real del mercado · Semana del 26 may al 3 jun 2026",
   updated: "Actualizado: 3 de junio de 2026",
@@ -248,61 +251,76 @@ const WEEKLY_DATA = {
 
 /* ──────────────── Render ──────────────── */
 const $ = id => document.getElementById(id);
-$("title").textContent = WEEKLY_DATA.title;
-$("subtitle").textContent = WEEKLY_DATA.subtitle;
-$("updated").textContent = WEEKLY_DATA.updated;
+let ACTIVE = FALLBACK_DATA;
 
-$("markets").innerHTML = WEEKLY_DATA.markets.map(m => `
-  <div class="mkt">
-    <div class="name">${m.name}</div>
-    <div class="val">${m.value}</div>
-    <div class="chg ${m.cls}">${m.change}</div>
-  </div>`).join("");
+function render(DATA){
+  ACTIVE = DATA;
+  $("title").textContent = DATA.title;
+  $("subtitle").textContent = DATA.subtitle;
+  $("updated").textContent = DATA.updated;
 
-$("context").innerHTML = WEEKLY_DATA.context;
+  $("markets").innerHTML = DATA.markets.map(m => `
+    <div class="mkt">
+      <div class="name">${m.name}</div>
+      <div class="val">${m.value}</div>
+      <div class="chg ${m.cls}">${m.change}</div>
+    </div>`).join("");
 
-$("stocks").innerHTML = WEEKLY_DATA.stocks.map(s => `
-  <div class="stock-row">
-    <span class="tk">${s.tk}</span>
-    <span class="rs">${s.rs}</span>
-    <span class="pc ${s.cls}">${s.pc}</span>
-  </div>`).join("");
+  $("context").innerHTML = DATA.context;
 
-$("news").innerHTML = WEEKLY_DATA.news.map(n => `
-  <div class="news-item"><h3>${n.h}</h3><p>${n.p}</p></div>`).join("");
+  $("stocks").innerHTML = DATA.stocks.map(s => `
+    <div class="stock-row">
+      <span class="tk">${s.tk}</span>
+      <span class="rs">${s.rs}</span>
+      <span class="pc ${s.cls}">${s.pc}</span>
+    </div>`).join("");
 
-const riskLabel = { bajo:"🟢 Riesgo Bajo", medio:"🟡 Riesgo Medio", alto:"🔴 Riesgo Alto" };
-function ideaCard(i){
-  return `<div class="idea ${i.riesgo}">
-    <div class="tk">${i.tk}</div>
-    <div class="nm">${i.nm}</div>
-    <div class="badges">
-      <span class="badge b-tipo">${i.tipo}</span>
-      <span class="badge b-mkt">${i.mkt}</span>
-      <span class="badge b-${i.riesgo}">${riskLabel[i.riesgo]}</span>
-    </div>
-    <div class="tesis">${i.tesis}</div>
-    <div class="meta">
-      <div><div class="l">Nivel</div><div class="v">${i.precio}</div></div>
-      <div><div class="l">Catalizador</div><div class="v">${i.catalizador}</div></div>
-      <div><div class="l">A vigilar</div><div class="v">${i.vigilar}</div></div>
-      <div><div class="l">Horizonte</div><div class="v">${i.horizonte}</div></div>
-    </div>
-  </div>`;
+  $("news").innerHTML = DATA.news.map(n => `
+    <div class="news-item"><h3>${n.h}</h3><p>${n.p}</p></div>`).join("");
+
+  const riskLabel = { bajo:"🟢 Riesgo Bajo", medio:"🟡 Riesgo Medio", alto:"🔴 Riesgo Alto" };
+  const ideaCard = i => `<div class="idea ${i.riesgo}">
+      <div class="tk">${i.tk}</div>
+      <div class="nm">${i.nm}</div>
+      <div class="badges">
+        <span class="badge b-tipo">${i.tipo}</span>
+        <span class="badge b-mkt">${i.mkt}</span>
+        <span class="badge b-${i.riesgo}">${riskLabel[i.riesgo]||i.riesgo}</span>
+      </div>
+      <div class="tesis">${i.tesis}</div>
+      <div class="meta">
+        <div><div class="l">Nivel</div><div class="v">${i.precio}</div></div>
+        <div><div class="l">Catalizador</div><div class="v">${i.catalizador}</div></div>
+        <div><div class="l">A vigilar</div><div class="v">${i.vigilar}</div></div>
+        <div><div class="l">Horizonte</div><div class="v">${i.horizonte}</div></div>
+      </div>
+    </div>`;
+  const blocks = [
+    { t:"🚀 Momentum — lo que tiene fuerza", k:"momentum" },
+    { t:"💎 Valor / Rebote — oportunidades en caídas", k:"valor" },
+    { t:"🛡️ Defensivas — para reducir riesgo", k:"defensivas" }
+  ];
+  $("ideas").innerHTML = blocks.map(b => `
+    <div class="ideas-block">
+      <div class="ih">${b.t}</div>
+      <div class="ideas-grid">${(DATA.ideas[b.k]||[]).map(ideaCard).join("")}</div>
+    </div>`).join("");
 }
-const blocks = [
-  { t:"🚀 Momentum — lo que tiene fuerza", k:"momentum" },
-  { t:"💎 Valor / Rebote — oportunidades en caídas", k:"valor" },
-  { t:"🛡️ Defensivas — para reducir riesgo", k:"defensivas" }
-];
-$("ideas").innerHTML = blocks.map(b => `
-  <div class="ideas-block">
-    <div class="ih">${b.t}</div>
-    <div class="ideas-grid">${WEEKLY_DATA.ideas[b.k].map(ideaCard).join("")}</div>
-  </div>`).join("");
+
+/* Lee data.json (generado por el workflow semanal); si no existe, usa el respaldo */
+(async function boot(){
+  try{
+    const r = await fetch("data.json?t=" + Date.now(), {cache:"no-store"});
+    if(!r.ok) throw new Error("no data.json");
+    const d = await r.json();
+    render(d);
+  }catch(e){
+    render(FALLBACK_DATA);
+  }
+})();
 
 /* ──────────────── Cripto en vivo (CoinGecko, gratis, sin clave) ──────────────── */
-(async function liveCrypto(){
+(function liveCrypto(){
   const fmt = n => "$" + n.toLocaleString("es-ES", {maximumFractionDigits: n < 10 ? 2 : 0});
   function paint(id, price, change){
     $(id+"-px").textContent = fmt(price);
@@ -310,21 +328,28 @@ $("ideas").innerHTML = blocks.map(b => `
     const up = change >= 0;
     el.textContent = (up?"▲ +":"▼ ") + change.toFixed(2) + "% (24h)";
     el.className = "ch " + (up?"up":"down");
+    $(id+"-tag").textContent = "LIVE";
   }
   function fallback(){
-    // Si la API no responde, usar el snapshot semanal incrustado
-    const btc = WEEKLY_DATA.markets.find(m=>m.name==="Bitcoin");
-    const eth = WEEKLY_DATA.markets.find(m=>m.name==="Ethereum");
-    $("btc-px").textContent = btc.value; $("btc-ch").textContent = btc.change; $("btc-ch").className="ch "+btc.cls; $("btc-tag").textContent="SEM.";
-    $("eth-px").textContent = eth.value; $("eth-ch").textContent = eth.change; $("eth-ch").className="ch "+eth.cls; $("eth-tag").textContent="SEM.";
+    const btc = ACTIVE.markets.find(m=>m.name==="Bitcoin");
+    const eth = ACTIVE.markets.find(m=>m.name==="Ethereum");
+    if(btc){ $("btc-px").textContent = btc.value; $("btc-ch").textContent = btc.change; $("btc-ch").className="ch "+btc.cls; $("btc-tag").textContent="SEM."; }
+    if(eth){ $("eth-px").textContent = eth.value; $("eth-ch").textContent = eth.change; $("eth-ch").className="ch "+eth.cls; $("eth-tag").textContent="SEM."; }
+    $("live-ts").textContent = "Sin conexión con CoinGecko · mostrando datos de la semana";
   }
-  try{
-    const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true");
-    if(!r.ok) throw new Error("api");
-    const d = await r.json();
-    paint("btc", d.bitcoin.usd, d.bitcoin.usd_24h_change);
-    paint("eth", d.ethereum.usd, d.ethereum.usd_24h_change);
-  }catch(e){ fallback(); }
+  async function refresh(){
+    try{
+      const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true");
+      if(!r.ok) throw new Error("api");
+      const d = await r.json();
+      paint("btc", d.bitcoin.usd, d.bitcoin.usd_24h_change);
+      paint("eth", d.ethereum.usd, d.ethereum.usd_24h_change);
+      const hora = new Date().toLocaleTimeString("es-ES");
+      $("live-ts").textContent = "En directo vía CoinGecko · actualizado a las " + hora;
+    }catch(e){ fallback(); }
+  }
+  refresh();
+  setInterval(refresh, 60000); // se refresca solo cada 60 segundos
 })();
 </script>
 </body>

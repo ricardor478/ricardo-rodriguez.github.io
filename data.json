@@ -1,0 +1,42 @@
+{
+  "title": "Resumen e Ideas de Inversión",
+  "subtitle": "Basado en el movimiento real del mercado · Semana del 26 may al 3 jun 2026",
+  "updated": "Actualizado: 3 de junio de 2026",
+  "markets": [
+    { "name": "S&P 500", "value": "7.600", "change": "Máx. histórico · 9ª sem. ↑", "cls": "up" },
+    { "name": "Nasdaq Comp.", "value": "27.086", "change": "Boom de chips ↑", "cls": "up" },
+    { "name": "IBEX 35", "value": "18.185", "change": "−0,97% últ. sesión", "cls": "down" },
+    { "name": "DAX", "value": "25.003", "change": "+0,87% sem.", "cls": "up" },
+    { "name": "CAC 40", "value": "8.147", "change": "+0,83% sem.", "cls": "up" },
+    { "name": "Bitcoin", "value": "$67.250", "change": "≈ −8% sem.", "cls": "down" },
+    { "name": "Ethereum", "value": "$1.884", "change": "≈ −7% sem.", "cls": "down" },
+    { "name": "Oro", "value": "$4.578", "change": "+1% · refugio", "cls": "up" }
+  ],
+  "context": "Semana de contrastes. La renta variable estadounidense marcó <b>nuevos máximos históricos</b> (S&P 500 por encima de 7.600 por primera vez) impulsada por el boom de los chips y la IA, con Dell y Snowflake disparándose ~40% tras resultados. Europa acompañó (DAX +0,87%, CAC +0,83%), mientras IBEX y FTSE quedaron algo rezagados. En el lado opuesto, las <b>criptomonedas sufrieron un fuerte castigo</b> (BTC por debajo de $67k, ETH bajo $2.000) por salidas récord de ETFs y rotación hacia la IA. El telón macro sigue tenso: el dato de <b>PCE fue el más alto en casi tres años</b>, la geopolítica de Oriente Medio mantiene el petróleo cerca de $88 y el <b>viernes llega el informe de empleo</b>, clave para las expectativas de tipos de la Fed.",
+  "stocks": [
+    { "tk": "DELL", "rs": "Resultados trimestrales excepcionales; sigue la racha tech", "pc": "+40%", "cls": "up" },
+    { "tk": "SNOW", "rs": "Snowflake dispara tras un fuerte beat en resultados", "pc": "+40%", "cls": "up" },
+    { "tk": "Semis", "rs": "Liderazgo de la IA: Nvidia, AMD, ASML empujan el Nasdaq", "pc": "Sector ↑", "cls": "up" },
+    { "tk": "Cripto", "rs": "BTC y ETH a la baja por salidas récord de ETFs (~$1.420 M)", "pc": "Sector ↓", "cls": "down" }
+  ],
+  "news": [
+    { "h": "PCE, el más alto en casi tres años", "p": "La inflación subyacente sorprendió al alza, pero los índices marcaron récords igualmente. La Fed sigue en el foco de cara a sus próximas decisiones de tipos." },
+    { "h": "Esperanzas de alto el fuego EE.UU.–Irán", "p": "Las negociaciones sobre una extensión de 60 días y la reapertura del Estrecho de Ormuz mueven el petróleo (~$88) y el apetito por el riesgo." },
+    { "h": "Salidas récord de ETFs de Bitcoin", "p": "Cerca de $1.420 M en salidas marcan un tono risk-off en cripto mientras el capital rota hacia la IA. El viernes, el informe de empleo será clave para los tipos." }
+  ],
+  "ideas": {
+    "momentum": [
+      { "tk": "SOXX / QQQ", "nm": "ETF semiconductores / Nasdaq 100", "tipo": "ETF", "mkt": "EE.UU.", "riesgo": "medio", "tesis": "El boom de chips lidera el mercado. Un ETF de semis o del Nasdaq da exposición diversificada a la tendencia de IA sin depender de una sola acción.", "precio": "Cotiza en máximos", "catalizador": "Resultados tech (Dell/Snowflake +40%)", "vigilar": "Valoraciones exigentes", "horizonte": "Medio plazo" },
+      { "tk": "XLE / Repsol", "nm": "Energía (ETF / acción ES)", "tipo": "ETF · Acción", "mkt": "EE.UU. · España", "riesgo": "medio", "tesis": "El petróleo ronda los $88 por la geopolítica de Oriente Medio. La energía funciona como jugada de momentum y cobertura ante el riesgo geopolítico.", "precio": "Brent/WTI ~$88", "catalizador": "Tensión EE.UU.–Irán", "vigilar": "Un acuerdo que reabra Ormuz enfriaría el crudo", "horizonte": "Corto-medio" }
+    ],
+    "valor": [
+      { "tk": "BTC / ETH", "nm": "Bitcoin / Ethereum", "tipo": "Cripto", "mkt": "Cripto", "riesgo": "alto", "tesis": "Tras salidas récord de ETFs y la caída a ~$67k (BTC) y ~$1.880 (ETH), la zona se acerca a sobreventa (RSI bajo). Posible rebote táctico, pero volatilidad altísima.", "precio": "BTC ~$67k · ETH ~$1.9k", "catalizador": "Giro en flujos de ETF", "vigilar": "Más salidas / dato de empleo", "horizonte": "Especulativo" },
+      { "tk": "IBEX 35", "nm": "Bolsa española (ETF)", "tipo": "ETF", "mkt": "España", "riesgo": "medio", "tesis": "Rezagado frente a EE.UU. y Europa core esta semana. La banca (Santander) y los valores value pueden beneficiarse si el BCE mantiene tipos altos.", "precio": "Índice ~18.185", "catalizador": "Tipos altos del BCE", "vigilar": "Sensibilidad a energía", "horizonte": "Medio plazo" }
+    ],
+    "defensivas": [
+      { "tk": "MSCI World", "nm": "Fondo indexado global", "tipo": "Fondo indexado", "mkt": "Global", "riesgo": "bajo", "tesis": "Con los índices en máximos e inflación pegajosa, la vía más sólida sigue siendo la diversificación global y las aportaciones periódicas (DCA), no el market timing.", "precio": "Aportación periódica", "catalizador": "Crecimiento global", "vigilar": "Comisiones (TER bajo)", "horizonte": "Largo plazo" },
+      { "tk": "XLP / XLU", "nm": "Consumo básico / Utilities", "tipo": "ETF", "mkt": "EE.UU.", "riesgo": "bajo", "tesis": "Sectores defensivos para amortiguar volatilidad si el dato de empleo o la inflación sorprenden. Menor beta en un mercado caro y en máximos.", "precio": "Cotiza en rango", "catalizador": "Rotación defensiva", "vigilar": "Subidas de tipos", "horizonte": "Medio-largo" },
+      { "tk": "GLD", "nm": "Oro (ETF)", "tipo": "ETF", "mkt": "Global", "riesgo": "bajo", "tesis": "El oro (~$4.578) se mantiene firme como refugio ante la inflación persistente y el riesgo geopolítico. Aporta descorrelación a la cartera.", "precio": "Oro ~$4.578", "catalizador": "Inflación / geopolítica", "vigilar": "Dólar fuerte", "horizonte": "Largo plazo" }
+    ]
+  }
+}
